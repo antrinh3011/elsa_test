@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+{% block title %}Question list{% endblock %}
+
+{% block content %}
+<div class="user_section">
+    {% if session.username %}
+        <p>Welcome, {{ session.username }}!|<a href="{{ url_for('main.logout') }}">Logout</a></p>
+    {% else %}
+        <a href="{{ url_for('main.index') }}">Login</a>
+    {% endif %}
+</div>
+    {% set letters = ['A', 'B', 'C', 'D','E','F'] %}
+    <form action="/selected-quizs/" method="POST">
+        <ul>
+            {% for question in questions %}
+                <ul>
+                    Question {{ loop.index }}: {{ question['question_text'] }}
+                    {% for optquestion in question['options'] %}
+                    <li>
+                        <label>
+                            <input type="checkbox" name="answer" value="{{ optquestion['optanswer']}}">
+                            {{ letters[loop.index0] }}.{{ optquestion['optanswer']}}
+                        </label>
+                    </li>
+                    {% endfor %}
+                </ul> 
+            
+            {% else %}
+                <li>No questions available</li>
+            {% endfor %}
+        </ul>
+        {% if questions|length > 0 %}
+        <button id="submit-answer">Submit</button>
+        {% endif %}
+    </form>
+
+    <div id="score-section">
+        <h2>Your Score: <span id="user-score">0</span></h2>
+    </div>
+
+    <div id="leaderboard-section">
+        <h2>Leaderboard</h2>
+        <ul id="leaderboard"></ul>
+    </div>
+
+{% endblock %}

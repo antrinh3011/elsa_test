@@ -1,0 +1,16 @@
+import os
+import binascii
+
+DATABASE_USER = "root"
+DATABASE_PASSWORD = "Admin301188"
+DATABASE_HOST = "localhost"
+DATABASE_PORT = "3306"
+DATABASE_NAME = "quiz_app_db"
+DATABASE_NAME_ENVIRONMENT = "development"
+APP_SECRET_KEY = binascii.hexlify(os.urandom(24)).decode()
+
+class Config:
+    SQLALCHEMY_DATABASE_URI = f"mysql://{DATABASE_USER}:{DATABASE_PASSWORD}@{DATABASE_HOST}:{DATABASE_PORT}/{DATABASE_NAME}"
+    SQLALCHEMY_TRACK_MODIFICATIONS = False
+    SECRET_KEY = APP_SECRET_KEY
+

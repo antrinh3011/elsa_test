@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+{% block title %}Quizzes App{% endblock %}
+
+{% block content %}
+    <div class="user_section">
+        {% if session.username %}
+        <p>Welcome, {{ session.username }}!|<a href="{{ url_for('main.logout') }}">Logout</a></p>
+        {% else %}
+            <a href="{{ url_for('main.index') }}">Login</a>
+        {% endif %}
+    </div>
+    <ul>
+        {% for quiz in quizzes %}
+            <li>
+                <a href="/questions/{{ quiz['id'] }}">{{ quiz['quiz_name'] }}</a>
+            </li>
+        {% else %}
+            <li>No quizzes available</li>
+        {% endfor %}
+    </ul>
+    <!-- <div class="nav-links">
+        <a href="/login">Login</a> | <a href="/register">Register</a>
+    </div> -->
+{% endblock %}

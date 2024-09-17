@@ -1,0 +1,109 @@
+body {
+    font-family: Arial, sans-serif;
+    /* text-align: center; */
+    margin: 0;
+    padding: 20px;
+    background-color: #f4f4f4;
+}
+.user_info {
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    text-align: right;
+}
+h1 {
+    color: #333;
+    margin-bottom: 20px;
+}
+
+form {
+    margin-top: 20px;
+}
+
+#quiz-section, #score-section, #leaderboard-section {
+    margin-top: 30px;
+}
+
+.form-container {
+    margin: 20px auto;
+    max-width: 400px;
+    padding: 20px;
+    background: #fff;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+}
+.form-container label {
+    display: block;
+    margin-bottom: 8px;
+}
+.form-container input {
+    width: 100%;
+    padding: 8px;
+    margin-bottom: 20px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+.form-container button {
+    width: 100%;
+    padding: 10px;
+    background: #007bff;
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+.form-container button:hover {
+    background: #0056b3;
+}
+.nav-links {
+    margin-top: 20px;
+}
+.nav-links a {
+    display: inline-block;
+    margin: 10px;
+    padding: 10px 20px;
+    background: #007bff;
+    color: #fff;
+    text-decoration: none;
+    border-radius: 4px;
+}
+.nav-links a:hover {
+    background: #0056b3;
+}
+
+
+ /* Tạo danh sách cơ bản */
+ ul {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+  }
+
+  li {
+    padding: 8px;
+    border-bottom: 1px solid #ddd;
+  }
+
+  /* Danh sách ngang */
+  ul.horizontal {
+    display: flex;
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+  }
+
+  ul.horizontal li {
+    margin-right: 20px;
+  }
+
+  /* Danh sách với hình ảnh dấu chấm */
+  ul.custom-list {
+    list-style-type: none;
+    padding: 0;
+  }
+
+  ul.custom-list li {
+    padding: 8px;
+    /* background: url('path/to/icon.png') no-repeat left center;
+    background-size: 16px 16px; */
+  }
