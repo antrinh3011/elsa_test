@@ -4,25 +4,30 @@
 {% block content %}
 <div class="user_section">
     {% if session.username %}
-        <p>Welcome, {{ session.username }}!|<a href="{{ url_for('main.logout') }}">Logout</a></p>
+        <p>Welcome, {{ session.username }}!|<a id="logout" href="{{ url_for('main.logout') }}">Logout</a></p>
     {% else %}
         <a href="{{ url_for('main.index') }}">Login</a>
     {% endif %}
 </div>
+    <a href="{{ url_for('main.login') }}">Back to quizzes list</a>
     {% set letters = ['A', 'B', 'C', 'D','E','F'] %}
-    <form action="/selected-quizs/" method="POST">
+    <form id="quiz-form" action="{{ url_for('main.submit_answer') }}" method="POST">
+        <input id="quizID" type="hidden" value="{{ user_score['quiz_id'] }}"/>
         <ul>
             {% for question in questions %}
-                <ul>
+                <ul class="question-group" data-question="{{question['question_id']}}">
                     Question {{ loop.index }}: {{ question['question_text'] }}
-                    {% for optquestion in question['options'] %}
-                    <li>
-                        <label>
-                            <input type="checkbox" name="answer" value="{{ optquestion['optanswer']}}">
-                            {{ letters[loop.index0] }}.{{ optquestion['optanswer']}}
-                        </label>
-                    </li>
-                    {% endfor %}
+                    {% set choiceID = loop.index %}
+                        {% for optquestion in question['options'] %}
+                            <li>
+                                <label>
+                                    <input type="radio" name="choice{{choiceID}}" value="{{ optquestion['optanswer']}}">
+                                    {{ letters[loop.index0] }}.{{ optquestion['optanswer']}}
+                                </label>
+                                
+                            </li>
+                        {% endfor %}
+                    <div class="error-message error"></div>
                 </ul> 
             
             {% else %}
