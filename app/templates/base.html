@@ -4,11 +4,19 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% block title %}My Website{% endblock %}</title>
+    <script src="https://cdn.socket.io/4.5.4/socket.io.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <link rel="stylesheet" href="/static/style.css">
+    <script type="text/javascript" src="/static/scriptHelper.js"></script>
 </head>
 <body>
-    {% block content %}
-    
-    {% endblock %}
+    <h1>Quiz Application</h1>
+    {% block content %}{% endblock %}
+    {% if loginuser %}
+        <input id="username" type="hidden" value="{{ loginuser['username'] }}" />
+        <input id="room" type="hidden" value="{{ user_score['quiz_id'] }}"/>
+        <input id="user_score" type="hidden" value="{{ user_score['score'] }}"/>
+    {% endif %}
+    <div id="user-list"></div>
 </body>
 </html>

@@ -1,4 +1,3 @@
-from flask import jsonify
 from app.models import *
 
 def get_quizzes():
@@ -23,42 +22,39 @@ def get_questions(quiz_id : str):
         for question in question_list:
             question_options = QuestionOption.query.filter(QuestionOption.question_id == question.id).all()
             questions_list.append({
+                "question_id" : question.id,
                 "quiz_id": question.quiz_id,
                 "question_text": question.question_text,
-                "options": [{"optanswer": option.optanswer, "correct_answer": option.correct_answer} for option in question_options]
+                "options": [{"optanswer": option.optanswer} for option in question_options]
             })
         
         return questions_list
     
-# async def check_answer(db: AsyncSession, 
-#                        quiz_id: int, 
-#                        answer: str):
-#     # Giả sử mỗi quiz chỉ có 1 câu hỏi hiện tại cho đơn giản
-#     async with db.begin():
-#         question = await db.execute(select(Question).filter(Question.quiz_id == quiz_id))
-#         result = question.scalars().first()
-#         if result.correct_answer.lower() == answer.lower():
-#             return True
-#         return False
-    
+def check_answer(question_id: int,answer: str):
+    # Assume that only one correct anwser
+    question_option = QuestionOption.query.filter(QuestionOption.question_id == question_id,
+                                                  QuestionOption.optanswer == answer).first()
+    if question_option:
+        if question_option.correct_answer == True:
+             return 10
+    return 0
 
-# async def update_score(db: AsyncSession, 
-#                        quiz_id: int, 
-#                        user_id: int, 
-#                        iscorrect: bool):
-#     async with db.begin():
-#         score_entry = await db.execute(select(Score).filter(Score.quiz_id == quiz_id, Score.user_id == user_id))
-#         result = score_entry.scalars().first()
-#         if iscorrect:
-#             result.score += 10  # Cộng thêm điểm nếu đúng
-#             db.commit()
-#         return result.score
-    
-# # Lấy bảng xếp hạng hiện tại
-# async def get_leaderboard(db: AsyncSession, 
-#                           quiz_id: str):
-#     async with db.begin():
-#         scores = await db.execute(select(Score).filter(Score.quiz_id == quiz_id).order_by(Score.score.desc()))
-#         results = scores.scalars().all()
-#         return [{"user_id": item.user_id, "score": item.score} for item in results]
+
+def add_user_score(quiz_id: int, 
+                user_id: int, 
+                points: int):
+        score_entry = Score.query.filter(Score.user_id == user_id,
+                                        Score.quiz_id == quiz_id).first()
+        
+        if not score_entry:
+            user_score = Score(user_id=user_id,
+                               quiz_id=quiz_id,
+                               score=points)
+            db.session.add(user_score)
+            db.session.commit() 
+            return user_score
+        else:
+            score_entry.score = points
+            db.session.commit() 
+        return score_entry
     

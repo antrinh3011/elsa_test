@@ -5,7 +5,7 @@ class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(255), unique=True, nullable=False)
     created_at = db.Column(db.TIMESTAMP, server_default=db.func.current_timestamp())
-    scores = db.relationship('Score', backref='users', lazy=True)
+    scores = db.relationship('Score', backref='user', lazy=True)
 
 class Quiz(db.Model):
     __tablename__ = 'quizzes'
@@ -13,6 +13,7 @@ class Quiz(db.Model):
     quiz_id = db.Column(db.String(255), unique=True, nullable=False)
     quiz_name = db.Column(db.String(255), nullable=False)
     questions = db.relationship('Question', backref='quizzes', lazy=True)
+    scores = db.relationship('Score', backref='quiz', lazy=True)
 
 class Question(db.Model):
     __tablename__ = 'questions'
@@ -34,3 +35,12 @@ class Score(db.Model):
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
     quiz_id = db.Column(db.Integer, db.ForeignKey('quizzes.id'), nullable=False)
     score = db.Column(db.Integer, default=0)
+    
+    def to_dict(self):
+        return {
+            'id': self.id,
+            'quiz_id': self.quiz_id,
+            'user_id': self.user_id,
+            'score': self.score
+        }
+    

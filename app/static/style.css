@@ -5,7 +5,7 @@ body {
     padding: 20px;
     background-color: #f4f4f4;
 }
-.user_info {
+.user_section {
     padding: 20px;
     border-radius: 8px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
@@ -107,3 +107,4 @@ form {
     /* background: url('path/to/icon.png') no-repeat left center;
     background-size: 16px 16px; */
   }
+  .error { color: red; font-size: 0.9em; }
