@@ -12,7 +12,7 @@ $(document).ready(function() {
     $('#quiz-form').submit(function(event) {
         event.preventDefault();
         var isValid = true;
-        var quiz_ID = $('#quizID').val(); //get quiz_id from hidden input
+        var quiz_ID = $('#quizID').val();
         $('.error-message').text(''); 
         var selectedChoices = [];
         

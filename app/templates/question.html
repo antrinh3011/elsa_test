@@ -9,7 +9,7 @@
         <a href="{{ url_for('main.index') }}">Login</a>
     {% endif %}
 </div>
-    <a href="{{ url_for('main.login') }}">Back to quizzes list</a>
+    <a href="{{ url_for('main.quizlist') }}">Back to quizzes list</a>
     {% set letters = ['A', 'B', 'C', 'D','E','F'] %}
     <form id="quiz-form" action="{{ url_for('main.submit_answer') }}" method="POST">
         <input id="quizID" type="hidden" value="{{ user_score['quiz_id'] }}"/>
@@ -40,7 +40,7 @@
     </form>
 
     <div id="score-section">
-        <h2>Your Score: <span id="user-score">0</span></h2>
+        <h2>Your Score: <span id="user-score"></span></h2>
     </div>
 
     <div id="leaderboard-section">

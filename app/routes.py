@@ -1,7 +1,8 @@
-from flask import Blueprint, render_template, request, redirect, url_for, session ,jsonify
+from flask import Blueprint, render_template, request, redirect, url_for, session ,jsonify,make_response
 from app import db
 from app.models import User,Score
 from app.quizhelper import *
+import uuid
 
 main_bp = Blueprint('main', __name__)
 
@@ -9,27 +10,32 @@ main_bp = Blueprint('main', __name__)
 def index():
     return render_template('index.html')
 
-@main_bp.route('/login', methods=['GET', 'POST'])
-def login():
+@main_bp.route('/quizlist', methods=['GET', 'POST'])
+def quizlist():
+    user = None
     if request.method == 'POST':
-        username = request.form['username']
-        user = User.query.filter_by(username=username).first()
-        if not user:
-            user = User(username=username)
-            db.session.add(user)
-            db.session.commit() 
-        session['user_id'] = user.id 
-        session['username'] = user.username
-    if session.get('username'):
+        username = request.form.get('username')
+        if username:
+            user = User.query.filter_by(username=username).first()
+            if not user:
+                user = User(username=username)
+                db.session.add(user)
+                db.session.commit()
+            session['user_id'] = user.id
+        else:
+            return redirect(url_for('main.index'))
+    
+    user_id = session.get('user_id')
+    if user_id:
+        user = User.query.get(user_id) 
         quizzes = get_quizzes()
-        return render_template('list_quizzes.html',quizzes = quizzes,username=session.get('username'))
+        return render_template('list_quizzes.html', quizzes=quizzes, username=user.username)
     else:
         return redirect(url_for('main.index'))
      
 @main_bp.route('/logout')
 def logout():
     session.pop('user_id', None)
-    session.pop('username', None)
     return redirect(url_for('main.index'))
 
 #Get question list by quiz_id

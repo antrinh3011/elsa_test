@@ -3,8 +3,8 @@
 
 {% block content %}
     <div class="user_section">
-        {% if session.username %}
-        <p>Welcome, {{ session.username }}!|<a href="{{ url_for('main.logout') }}">Logout</a></p>
+        {% if username %}
+        <p>Welcome, {{ username }}!|<a href="{{ url_for('main.logout') }}">Logout</a></p>
         {% else %}
             <a href="{{ url_for('main.index') }}">Login</a>
         {% endif %}
