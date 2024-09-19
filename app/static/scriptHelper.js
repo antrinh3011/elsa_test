@@ -1,87 +1,96 @@
 $(document).ready(function() {
-    var socket = io();
-    //Get user data from base.html
-    var username = $('#username').val();
-    var room = $('#room').val();
-    var score = $('#user_score').val();
-    var logout = $('#logout');
-    var user_score = $('#user-score');
+    const socket = io();
+    const $useridInput = $('#userid');
+    const $usernameInput = $('#username');
+    const $roomInput = $('#room');
+    const $userScoreInput = $('#user_score');
+    const $logoutButton = $('#logout');
+    const $userScoreDisplay = $('#user-score');
+    const $quizForm = $('#quiz-form');
+    const $userListElement = $('#user-list');
 
+    const userid = $useridInput.val();
+    const username = $usernameInput.val();
+    const room = $roomInput.val();
+    const score = $userScoreInput.val();
 
-    //Handle submit answer
-    $('#quiz-form').submit(function(event) {
+    // Handle submit answer
+    $quizForm.submit(function(event) {
         event.preventDefault();
-        var isValid = true;
-        var quiz_ID = $('#quizID').val();
-        $('.error-message').text(''); 
-        var selectedChoices = [];
         
+        let isValid = true;
+        const quizID = $('#quizID').val();
+        $('.error-message').text(''); 
+        const selectedChoices = [];
+
         $('.question-group').each(function() {
-            var questionGroup = $(this);
-            var errorMessage = questionGroup.find('.error-message');
-            if (questionGroup.find('input[type="radio"]:checked').length === 0) {
-                errorMessage.text('Please select anwser for this question!');
+            const $questionGroup = $(this);
+            const $errorMessage = $questionGroup.find('.error-message');
+            const $selectedRadio = $questionGroup.find('input[type="radio"]:checked');
+
+            if ($selectedRadio.length === 0) {
+                $errorMessage.text('Please select answer for this question!');
                 isValid = false;
             } else {
-                errorMessage.text(''); 
-                var selectedRadio = questionGroup.find('input[type="radio"]:checked');
+                $errorMessage.text('');
                 selectedChoices.push({
-                    name: selectedRadio.attr('name'),
-                    answervalue: selectedRadio.val(),
-                    questionid: questionGroup.data('question')
+                    name: $selectedRadio.attr('name'),
+                    answervalue: $selectedRadio.val(),
+                    questionid: $questionGroup.data('question')
                 });
             }
         });
 
         if (isValid) {
             $.ajax({
-                url:  $(this).attr('action'), 
+                url: $quizForm.attr('action'),
                 method: 'POST',
                 contentType: 'application/json',
                 data: JSON.stringify({
-                    'selectedChoices': selectedChoices,
-                    'quiz_ID': quiz_ID
+                    selectedChoices: selectedChoices,
+                    quiz_ID: quizID,
+                    user_id: userid
                 }),
                 success: function(response) {
-                    //console.log(response);
-                    //Handle real time submit answer to update new score
-                    socket.emit('submit_answer', {username: username,
-                                                    room: response.user_score.quiz_id,
-                                                    points: response.user_score.score}); // socket.js >> @socketio.on('submit_answer')
+                    console.log(response)
+                    socket.emit('submit_answer', {
+                        'username': username,
+                        'room': response.user_score.quiz_id,
+                        'points': response.user_score.score
+                    });
                 },
                 error: function(error) {
                     console.log(error);
                 }
             });
         }
-       
     });
 
-    
-    //Real time using quizID is room and add customer joined to room
-    if(username && room) {
-        socket.emit('join', {username: username, room: room,points:score}); // socket.js >> @socketio.on('join')
-    }
-    //Real time display user out room : socket.js >> @socketio.on('join')
-    if(logout && username) {
-        logout.click(function() {
-            socket.emit('leave', {username: username});
+    // Real-time using quizID as room and add customer joined to room
+    if (username && room) {
+        socket.emit('join', {
+            'username': username,
+            'room': room,
+            'points': score
         });
     }
-    //Real time display user joined
-    socket.on('update_user_list', function(data) { // socket.js >> emit('update_user_list')
-        var $userListElement = $('#user-list');
+
+    // Real-time display user out room
+    if ($logoutButton.length && username) {
+        $logoutButton.click(function() {
+            socket.emit('leave', { 'username': username });
+        });
+    }
+
+    // Real-time display user joined
+    socket.on('update_user_list', function(data) {
         $userListElement.empty();
-        $.each(data.users, function(index, user) {
-            if(user['username'] == username) {
-                user_score.empty();
-                user_score.append(`${user['points']}`);
+        data.users.forEach(user => {
+            if (user.username === username) {
+                $userScoreDisplay.empty().text(user.points);
             }
-            var message = user['username'] + ' access to the quiz. Point : ' + user['points'];
+            const message = `${user.username} access to the quiz. Point: ${user.points}`;
             $userListElement.append(`<p>${message}</p>`);
         });
-        
     });
-    
-    
 });

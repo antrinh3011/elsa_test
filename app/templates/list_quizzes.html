@@ -3,8 +3,8 @@
 
 {% block content %}
     <div class="user_section">
-        {% if username %}
-        <p>Welcome, {{ username }}!|<a href="{{ url_for('main.logout') }}">Logout</a></p>
+        {% if loginuser %}
+        <p>Welcome, {{ loginuser.username }}!|<a href="{{ url_for('main.logout') }}">Logout</a></p>
         {% else %}
             <a href="{{ url_for('main.index') }}">Login</a>
         {% endif %}
@@ -12,7 +12,7 @@
     <ul>
         {% for quiz in quizzes %}
             <li>
-                <a href="/questions/{{ quiz['id'] }}">{{ quiz['quiz_name'] }}</a>
+                <a href="/questions/{{ loginuser.id }}/{{ quiz['id'] }}">{{ quiz['quiz_name'] }}</a>
             </li>
         {% else %}
             <li>No quizzes available</li>

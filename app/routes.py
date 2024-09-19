@@ -29,7 +29,7 @@ def quizlist():
     if user_id:
         user = User.query.get(user_id) 
         quizzes = get_quizzes()
-        return render_template('list_quizzes.html', quizzes=quizzes, username=user.username)
+        return render_template('list_quizzes.html', quizzes=quizzes, loginuser = user)
     else:
         return redirect(url_for('main.index'))
      
@@ -39,10 +39,9 @@ def logout():
     return redirect(url_for('main.index'))
 
 #Get question list by quiz_id
-@main_bp.route('/questions/<int:quiz_id>', methods=['GET'])
-def questions(quiz_id: str):
+@main_bp.route('/questions/<int:user_id>/<int:quiz_id>', methods=['GET'])
+def questions(user_id:str,quiz_id: str):
     questions_list = get_questions(quiz_id)
-    user_id = session.get('user_id')
     if user_id:
         user = User.query.get(user_id)
         user_scores = [score for score in user.scores if score.quiz_id == quiz_id]
@@ -58,11 +57,12 @@ def submit_answer():
             data = request.json  
             selected_choices = data.get('selectedChoices', [])
             quiz_id = data.get('quiz_ID')
+            user_id = data.get('user_id')
             points = 0
             for anwser in selected_choices:
                 points += check_answer(anwser['questionid'],anwser['answervalue'])
             #Insert point to db
-            user_score = add_user_score(int(quiz_id),session.get('user_id'),points)
+            user_score = add_user_score(int(quiz_id),user_id,points)
             #emit score here
             return jsonify({'success': True, 'user_score': user_score.to_dict()}), 200
         except Exception as e:

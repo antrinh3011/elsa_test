@@ -14,6 +14,9 @@
     {% block content %}{% endblock %}
     {% if loginuser %}
         <input id="username" type="hidden" value="{{ loginuser['username'] }}" />
+        <input id="userid" type="hidden" value="{{ loginuser['id'] }}" />
+    {% endif %}
+    {% if user_score %}
         <input id="room" type="hidden" value="{{ user_score['quiz_id'] }}"/>
         <input id="user_score" type="hidden" value="{{ user_score['score'] }}"/>
     {% endif %}
