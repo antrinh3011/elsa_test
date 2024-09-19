@@ -1,6 +1,6 @@
 from flask import Blueprint, render_template, request, redirect, url_for, session ,jsonify
 from app import db
-from app.models import User, Quiz, Question, QuestionOption, Score
+from app.models import User,Score
 from app.quizhelper import *
 
 main_bp = Blueprint('main', __name__)
